@@ -18,15 +18,44 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
-
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+//ARRANCANDO
+//comprobando que este bien el formato de fecha pedido
+
+const isValidDate=(date)=>date.toUTCString()==="Invalid Date";
+
+app.get("/api/:date", (req,res)=>{
+  let date=new Date(req.params.date);
+
+  if(isValidDate(date)){
+    date= new Date(+req.params.date)
+  } 
+
+  if(isValidDate(date)){
+    res.json({ error : "Invalid Date" })
+    return;
+  }
+
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString()
+  })
+});
+
+app.get("/api",(req,res)=>{  
+  res.json({
+    unix:new Date().getTime(),
+    utc:new Date().toUTCString()
+  })
+})
+
+
